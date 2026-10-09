@@ -4,36 +4,40 @@ import { IsClickProvider } from "./components/isClickedContext";
 import Projects from "./components/projects";
 import Footer from "./components/footer";
 import ParticleField from "./components/particleField";
-import { useEffect } from "react";
+import ScrollLock from "./components/scrollLock";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
 
 function App() {
+  const [lenis, setLenis] = useState<Lenis | null>(null);
+
   useEffect(() => {
-    const lenis = new Lenis();
+    const instance = new Lenis();
     let rafId = 0;
 
     function raf(time: DOMHighResTimeStamp) {
-      lenis.raf(time);
+      instance.raf(time);
       rafId = requestAnimationFrame(raf);
     }
 
     rafId = requestAnimationFrame(raf);
+    setLenis(instance);
 
     return () => {
       cancelAnimationFrame(rafId);
-      lenis.destroy();
+      instance.destroy();
     };
   }, []);
 
   return (
     <div>
+      {/* 화면 전체에 고정된 배경. 모든 섹션 뒤에서 움직입니다. */}
+      <ParticleField />
       <IsClickProvider>
-        {/* isolation: isolate → 파티클(z-index:-1)이 이 영역 안쪽 배경에만 깔립니다 */}
-        <div style={{ position: "relative", isolation: "isolate" }}>
-          <ParticleField />
-          <Header />
-          <Introduce />
-        </div>
+        {/* 헤더 애니메이션(isClick)이 끝나기 전까지 스크롤 잠금 */}
+        <ScrollLock lenis={lenis} />
+        <Header />
+        <Introduce />
       </IsClickProvider>
       <Projects />
       <Footer />
