@@ -112,3 +112,58 @@ border-radius: 10px;
   position: absolute;
   transition: top 0.5s cubic-bezier(0.76, 0, 0.24, 1);
 }
+
+/* ---------- 프로젝트 인디케이터 ----------
+   .Projects(sticky) 안에 absolute로 놓아서, 섹션이 화면에 고정된 동안에만 보입니다.
+   html font-size가 모바일에서 8px까지 줄어들기 때문에 rem 대신 px을 씁니다. */
+.nav {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navDot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: #17171a;
+  opacity: 0.25;
+  cursor: pointer;
+  transition: width 0.3s, opacity 0.3s;
+}
+
+/* 터치하기 쉽도록 눈에 보이는 점보다 넓은 클릭 영역 */
+.navDot::after {
+  content: "";
+  position: absolute;
+  inset: -12px -5px;
+}
+
+.navDot:hover {
+  opacity: 0.5;
+}
+
+/* .navDot:hover보다 우선하도록 클래스 두 개로 지정 */
+.navDot.navDotActive {
+  width: 30px;
+  opacity: 1;
+}
+
+.navDot:focus-visible {
+  outline: 2px solid #17171a;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navDot {
+    transition: none;
+  }
+}

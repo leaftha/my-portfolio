@@ -1,5 +1,6 @@
 import style from "../style/introduce.module.css";
 import IntroduceTitle from "./introduceTitle";
+import TiltImage from "./tiltImage";
 import { motion, useInView } from "framer-motion";
 import { IsClickContext } from "./isClickedContext";
 import { useContext, useRef, useEffect, useState } from "react";
@@ -13,14 +14,12 @@ function Introduce() {
   const isView = useInView(introduce);
 
   useEffect(() => {
-    const update = () => {
-      const width = window.innerWidth;
-      setWidth(width);
-    };
+    const update = () => setWidth(window.innerWidth);
     update();
     window.addEventListener("resize", update);
 
-    return () => window.addEventListener("resize", update);
+    // 기존 코드는 여기서 addEventListener를 또 호출해 리스너가 제거되지 않았습니다.
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   const description: string[] = [
@@ -50,27 +49,25 @@ function Introduce() {
     <>
       <div ref={introduce} className={style.body}>
         <div className={style.introduce}>
-          <img
+          <TiltImage
             className={style.profileImg}
             src={`${process.env.PUBLIC_URL}/image/profile.jpg`}
+            alt="피세찬 프로필 사진"
           />
           <div className={style.text}>
-            {description.map((line, idx) => (
-              <p key={idx}>
-                {line.split("").map((word, idx) => {
-                  return (
-                    <span key={idx} className={style.mask}>
-                      <motion.span
-                        variants={slideUp}
-                        custom={idx}
-                        animate={clicked?.isClick && isView ? "open" : "closed"}
-                        key={idx}
-                      >
-                        {word}
-                      </motion.span>
-                    </span>
-                  );
-                })}
+            {description.map((line, lineIdx) => (
+              <p key={lineIdx}>
+                {line.split("").map((char, idx) => (
+                  <span key={idx} className={style.mask}>
+                    <motion.span
+                      variants={slideUp}
+                      custom={idx}
+                      animate={clicked?.isClick && isView ? "open" : "closed"}
+                    >
+                      {char}
+                    </motion.span>
+                  </span>
+                ))}
               </p>
             ))}
           </div>

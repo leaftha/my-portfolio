@@ -39,12 +39,12 @@
   font-size: 1.8em;
   font-weight: bold;
 }
-
 .skilGrid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  grid-gap: 0.625em;
+  column-gap: 0.625em;
+  row-gap: 3em; /* 이름표가 들어갈 자리 */
   justify-items: center;
   align-items: center;
   margin: 1.25em 0;
@@ -57,6 +57,10 @@
   border-radius: 20%;
 }
 
+/* 호버한 아이콘(과 그 이름표)을 항상 맨 위로 */
+.skilGrid > div:hover {
+  z-index: 10;
+}
 .hyper {
   text-decoration: underline;
 }
